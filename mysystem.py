@@ -5,55 +5,21 @@ traco = '-' * 14
 
 
 # Listas
-#produto: [0]: código, [1]: nome, [2]: fabricante, [3]: preco, [4]: estoque, [5]: quantidade vendida.
+# produto: [0]: código, [1]: nome, [2]: fabricante, [3]: preco, [4]: estoque, [5]: quantidade vendida.
 produto = []
-#cliente: [0]: código, [1]: nome, [3]: cpf.
+# cliente: [0]: código, [1]: nome, [3]: cpf.
 cliente = []
-#admin: [0]: usuário, [1]: senha.
+# admin: [0]: usuário, [1]: senha.
 admin = []
-#cad: cadastrado.
+# cad: cadastrado.
 cadProdutos = []
 cadClientes = []
 cadAdmin = []
 
 
 # Funções
-def cadastraProduto():
-    japossui = False
-    
-    codP = int(input('\nCódigo para o produto: '))
-
-#Procura se o código de produto já foi cadastrado anteriormente.
-    for produto in cadProdutos:
-        if produto[0] == codP:
-            japossui = True
-            print('\nCódigo de produto já existente!')
-            choose = int(input('1-Tentar novamente / 2-voltar ao menu\n\nEscolha: '))
-            if choose == 1:
-                cadastraProduto()
-            elif choose == 2:
-                print(bckMenu)
-                gerenciarProdutos()
-            else:
-                print(numError,bckMenu)
-                gerenciarProdutos()
-
-
-#Cadastrando o produto.
-    if (not japossui):
-        nomeP = str(input('Nome do produto: ').title())
-        fabP = str(input('Nome do fabricante: ').title())
-        precoP = float(input('Preço do produto: '))
-        qntP = int(input('Quantidade em estoque: '))
-
-        vendaP = 0
-        produto = [codP, nomeP, fabP, precoP, qntP, vendaP]
-        cadProdutos.append(produto)
-        print(f'\nProduto cadastrado!\n\n{traco}\nCód: {produto[0]}\nNome: {produto[1]}\nFabricante: {produto[2]}\nPreço: R${produto[3]:.2f}\nEstoque: {produto[4]}\n{traco}')
-        gerenciarProdutos()
-
-
 def cadastrarProduto():
+    # Função chamada para cadastrar um produto.
     escolhaCadastroProduto = int(input('\nDeseja cadastrar um produto?\n1-Sim / 2-Não\n\nEscolha: '))
     if escolhaCadastroProduto == 1:
         cadastraProduto()
@@ -65,8 +31,51 @@ def cadastrarProduto():
         cadastrarProduto()
 
 
+def cadastraProduto():
+    # Função chamada pela função cadastrarProduto.
+    japossui = False
+    
+    # Recebe o código do produto.
+    codP = int(input('\nCódigo para o produto: '))
+
+    # Procurando se o código de produto já foi cadastrado anteriormente:
+    for produto in cadProdutos:
+        if produto[0] == codP:
+            japossui = True
+            print('\nCódigo de produto já existente!')
+            choose = int(input('1-Tentar novamente / 2-voltar ao menu\n\nEscolha: '))
+            if choose == 1:
+                # Se o produto já existe, chama novamente a função.
+                cadastraProduto()
+            elif choose == 2:
+                print(bckMenu)
+                # Volta ao menu de gerenciamento.
+                gerenciarProdutos()
+            else:
+                # Diz que o número escolhido é inválido e volta ao menu de gerenciamento.
+                print(numError,bckMenu)
+                gerenciarProdutos()
+
+
+    # Pedindo informações do produto se ele ainda não tiver sido cadastrado:
+    if (not japossui):
+        nomeP = str(input('Nome do produto: ').title())
+        fabP = str(input('Nome do fabricante: ').title())
+        precoP = float(input('Preço do produto: '))
+        qntP = int(input('Quantidade em estoque: '))
+
+        vendaP = 0
+        # Cadastrando o produto.
+        produto = [codP, nomeP, fabP, precoP, qntP, vendaP]
+        cadProdutos.append(produto)
+        print(f'\nProduto cadastrado!\n\n{traco}\nCód: {produto[0]}\nNome: {produto[1]}\nFabricante: {produto[2]}\nPreço: R${produto[3]:.2f}\nEstoque: {produto[4]}\n{traco}')
+        gerenciarProdutos()
+
+
 def visualizarEstoque():
+    # Função para mostrar todos os produtos cadastrados:
     if cadProdutos != []:
+        # Se houver produtos cadastrados, mostra-os.
         for produto in cadProdutos:
             print(f'\nCód: {produto[0]}\nNome: {produto[1]}\nFabricante: {produto[2]}\nPreço: R${produto[3]:.2f}\nEstoque: {produto[4]}\n{traco}')
     else:
@@ -74,15 +83,20 @@ def visualizarEstoque():
 
 
 def alterarPreco():
+    # Função para alterar os preços dos produtos:
     passou = False
     if cadProdutos == []:
+        # Verifica se existe produto para a troca de preço.
         print('\nNenhum produto cadastrado')
         gerenciarProdutos()
     else:
+        # Alterando o preço:
         alterarProduto = int(input('\nCódigo do produto: '))
         for produto in cadProdutos:
+            # Verificando a existência do produto:
             if (produto[0] == alterarProduto):
                 passou = True
+                # Cadastrando novo preço.
                 newP = float(input(f'{produto[1]} / {produto[2]}\nValor atual: R${produto[3]:.2f}\nDigite o novo preço: R$'))
                 produto[3] = newP
                 print('\nPreço alterado com sucesso!')
@@ -100,6 +114,7 @@ def alterarPreco():
 
 
 def vendaProduto():
+    # Função para realizar a venda dos produtos:
     passou = False
     if cadProdutos == []:
         print('\nNenhum produto cadastrado')
@@ -107,6 +122,7 @@ def vendaProduto():
         alterarProduto = int(input('\nCódigo do produto: '))
         for produto in cadProdutos:
             if (produto[0] == alterarProduto):
+                # Realizando a venda:
                 passou = True
                 beforeVendaP = produto[5]
                 vendaP = int(input(f'Quantidade de {produto[1]} {produto[2]} que deseja vender: '))
@@ -136,17 +152,20 @@ def vendaProduto():
 
 
 def renomearProduto():
+    # Função para renomear o produto:
     passou = False
     dentro = False
     if cadProdutos == []:
         print('\nNenhum produto cadastrado')
         gerenciarProdutos()
     else:
+        # Perguntando se deseja alterar nome ou fabricante:
         chooseOne = int(input('\nDeseja renomear o produto ou o fabricante?\n1-Produto / 2-Fabricante / 3-Sair\n\nEscolha\n'))
         if chooseOne == 1:
             alterarProduto = int(input('\nCódigo do produto: '))
             for produto in cadProdutos:
                 if (produto[0] == alterarProduto):
+                    # Realizando a alteração do nome do produto:
                     passou = True
                     newName = str(input(f'Novo nome para {produto[1]} do fabricante {produto[2]}: '))
                     produto[1] = newName
@@ -156,6 +175,7 @@ def renomearProduto():
             alterarProduto = int(input('\nCódigo de um produto com o fabricante que deseja renomear: '))
             for produto in cadProdutos:
                 if (produto[0] == alterarProduto):
+                    # Realizando a alteração do nome do fabricante:
                     passou = True
                     fabForChange = produto[2]
                     allOrOne = int(input(f'Quer alterar {produto[2]}:\n1-Apenas nesse produto / 2-Todos / 3-Sair\n\nEscolha: '))
@@ -199,6 +219,7 @@ def renomearProduto():
 
 
 def removeProduto():
+    # Função para remover um produto:
     passou = False
     if cadProdutos == []:
         print('\nNenhum produto cadastrado')
@@ -210,6 +231,7 @@ def removeProduto():
                 passou = True
                 removerP = int(input(f'\nTem certeza que deseja remover {produto[1]} {produto[2]} do estoque?\n1-Sim / 2-Não\n\nEscolha: '))
                 if removerP == 1:
+                    # Removendo o produto.
                     cadProdutos.remove(produto)
                     print('\nProduto removido do estoque!')
                     print(bckMenu)
@@ -231,6 +253,7 @@ def removeProduto():
 
 
 def mostrarVendas():
+    # Função para mostrar as vendas realizadas de cada produto:
     venda = False
     if cadProdutos == []:
         print('\nNenhum produto cadastrado')
@@ -246,7 +269,21 @@ def mostrarVendas():
     gerenciarProdutos()
 
 
+def cadastrarCliente():
+    # Função para cadastrar novos clientes:
+    japossui = False
+    escolhaCadastroCliente = int(input('\nDeseja cadastrar um cliente?\n1-Sim / 2-Não\n\nEscolha: '))
+    if escolhaCadastroCliente == 1:
+        cadastraCliente()
+    elif escolhaCadastroCliente == 2:
+        print(bckMenu)
+    else:
+        print(numError)
+        cadastrarCliente()
+
+
 def cadastraCliente():
+    # Função chamada pela função cadastrarCliente.
     japossui = False
     passou = False
     codC = int(input('\nCódigo para o cliente: '))
@@ -276,19 +313,8 @@ def cadastraCliente():
             print(f'{traco}\nCód: {cliente[0]}\nSr(a): {cliente[1]}\nCPF: Não cadastrado!\n{traco}')
 
 
-def cadastrarCliente():
-    japossui = False
-    escolhaCadastroCliente = int(input('\nDeseja cadastrar um cliente?\n1-Sim / 2-Não\n\nEscolha: '))
-    if escolhaCadastroCliente == 1:
-        cadastraCliente()
-    elif escolhaCadastroCliente == 2:
-        print(bckMenu)
-    else:
-        print(numError)
-        cadastrarCliente()
-
-
 def visualizarClientes():
+    # Função para visualizar os clientes cadastrados:
     if cadClientes == []:
         print('\nNenhum cliente cadastrado')
     else:
@@ -315,6 +341,7 @@ def lucro():
 
 
 def verificaGerenciar():
+    # Função para verificar:
     passouLogin = False
     passouSenha = False
     login = str(input('\nLogin: '))
@@ -333,6 +360,7 @@ def verificaGerenciar():
 
 
 def cadastrarAdmin():
+    # Função para cadastrar um admnistrador do sistema:
     japossui = False
     print('\nCadastrando administrador!\n')
     adminL = input('\nDigite o nome de usuário de administrador: ')
@@ -363,6 +391,7 @@ def visualizarAdmin():
 
 
 def removerAdmin():
+    # Função para remoção de um administrador do sistema:
     passou = False
     if cadAdmin == []:
         print('\nNenhum administrador cadastrado')
@@ -399,6 +428,7 @@ def removerAdmin():
 
 
 def administrarAdmin():
+    # Função para administrar os administradores do sistema:
     print('\nSistema De Mercado\n||' + '=' * 15 + '||\n||  Bem-Vindo(a) ||\n||' + '=' * 15 + '||\n')
     admMenu = int(input('1-Cadastrar novo administrador\n2-Ver administradores\n3-Remover um administrador\n0-Voltar ao menu de gerenciamento\n\nEscolha: '))
     if admMenu > 3 or admMenu < 0:
@@ -413,6 +443,7 @@ def administrarAdmin():
 
 
 def gerenciarProdutos():
+    # Menu de gerenciamento:
     print('\nSistema De Mercado\n||' + '=' * 15 + '||\n||  Bem-Vindo(a) ||\n||' + '=' * 15 + '||\n')
     mngMenu = int(input('1-Cadastrar produto\n2-Alterar preço\n3-Renomear produto ou fabricante\n4-Remover produto\n5-Lista de vendas\n6-Cadastrar cliente\n7-Visualizar clientes\n9-Gerenciar Administradores\n0-Voltar ao menu principal\n\nEscolha: '))
     if mngMenu > 9 or mngMenu < 0 or mngMenu == 8:
@@ -439,6 +470,7 @@ def gerenciarProdutos():
 
 
 def maisMenu():
+    # Menu com algumas funções extras:
     print('\nSistema De Mercado\n')
     print("||" + "=" * 15 + "||\n||  Bem-Vindo(a) ||\n||" + "=" * 15 + "||\n")
     moreMenu = '1-Calcular lucro\n0-Voltar ao menu principal\n\nEscolha: '
@@ -457,6 +489,7 @@ def maisMenu():
 #Início da execução
 sair = False
 while (not sair):
+    # Menu Principal
     if cadAdmin == []:
         cadastrarAdmin()
     print('\nSistema De Mercado\n||' + '=' * 15 + '||\n||  Bem-Vindo(a) ||\n||' + '=' * 15 + '||\n')
